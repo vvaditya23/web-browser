@@ -22,8 +22,27 @@ class ViewController: UIViewController, WKNavigationDelegate {
         let url = URL(string: "https://www.google.co.in")!
         webview.load(URLRequest(url: url))
         webview.allowsBackForwardNavigationGestures = true
+        
+       navigationItem.rightBarButtonItem = UIBarButtonItem(title: "Open page", style: .plain, target: self, action: #selector(openTapped))
+    }
+    
+    @objc func openTapped() {
+        let ac = UIAlertController(title: "Open page...", message: "", preferredStyle: .actionSheet)
+        ac.addAction(UIAlertAction(title: "apple.com", style: .default, handler: openPage))
+        ac.addAction(UIAlertAction(title: "hackingwithswift.com", style: .default, handler: openPage))
+        ac.addAction(UIAlertAction(title: "Cancel", style: .cancel))
+        present(ac, animated: true)
     }
 
-
+    func openPage(action: UIAlertAction) {
+        guard let actionTitle = action.title else {return}
+        guard let url = URL(string: "https://" + actionTitle) else {return}
+        webview.load(URLRequest(url: url))
+    }
+    
+    func webView(_ webView: WKWebView, didFinish navigation: WKNavigation!) {
+        title = webview.title
+    }
+    
 }
 
